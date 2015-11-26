@@ -1,0 +1,26 @@
+{
+  "name": "consumer-pact-node",
+  "version": "1.0.0",
+  "description": "A consumer pact generator written for pure nodeJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "watch": "nodemon --exec \"npm test\" . "
+  },
+  "keywords": [
+    "Pact",
+    "Node"
+  ],
+  "author": "David Porter",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "mocha": "^2.3.4"
+  },
+  "dependencies": {
+    "assertion-error": "^1.0.1",
+    "deep-diff": "^0.3.3",
+    "jsonpath": "^0.2.1",
+    "lodash": "^3.10.1"
+  }
+}
