@@ -2,58 +2,63 @@
 
 var fs = require('fs');
 var expect = require('chai').expect;
-var verifier = require('../verifier');
+var verifier = require('../verifier')({
+    consumer: "test consumer",
+    provider: "test provider"
+});
+var AssertionError = require('assertion-error');
 
-describe.skip('Given the pact version 2 specification', function(){
+// Use this test for development, to look at a single one of the examples 
+describe.skip('Running a singular test', function(){
+    var test = require(__dirname + '/pact-specification/testcases/request/body/array with nested array that matches.json');
+    it("- " + test.comment, function(){
+        if(test.match){
+            verifier(test.actual, test.expected, test.expected.matchingRules, test.comment);
+        }
+        else {
+            expect(function generatedTest(){
+                verifier(test.actual, test.expected, test.expected.matchingRules, test.comment);
+            }).to.throw(AssertionError);
+        }
+    });
+});
 
-    var testScenarios; 
+describe('Given the pact version 2 specification', function(){
 
-    describe('function', function(){
+    var testScenarios = [];
 
-        testScenarios = [];
-
-        var specPath = "/pact-specification/testcases/request";
-        fs.readdirSync(__dirname + specPath + "/body").forEach(function(f){
+    var specPath = "/pact-specification/testcases/request";
+    fs.readdirSync(__dirname + specPath + "/body").forEach(function(f){
+        if(f.match(/\.json$/))
             testScenarios.push(require(__dirname + specPath + "/body/" + f));
-        });
-        fs.readdirSync(__dirname + specPath + "/headers").forEach(function(f){
+    });
+    fs.readdirSync(__dirname + specPath + "/headers").forEach(function(f){
+        if(f.match(/\.json$/))
             testScenarios.push(require(__dirname + specPath + "/headers/" + f));
-        });
-        fs.readdirSync(__dirname + specPath + "/method").forEach(function(f) {
+    });
+    fs.readdirSync(__dirname + specPath + "/method").forEach(function(f) {
+        if(f.match(/\.json$/))
             testScenarios.push(require(__dirname + specPath + "/method/" + f));
-        });
-        fs.readdirSync(__dirname + specPath + "/path").forEach(function(f) {
+    });
+    fs.readdirSync(__dirname + specPath + "/path").forEach(function(f) {
+        if(f.match(/\.json$/))
             testScenarios.push(require(__dirname + specPath + "/path/" + f));
-        });
-        fs.readdirSync(__dirname + specPath + "/query").forEach(function(f) {
+    });
+    fs.readdirSync(__dirname + specPath + "/query").forEach(function(f) {
+        if(f.match(/\.json$/))
             testScenarios.push(require(__dirname + specPath + "/query/" + f));
-        });
+    });
 
-        testScenarios.forEach(function(test){
-            it("Test verification: " + test.comment, function(){
-                if(test.match){
-                    expect(function generatedTest(){
-                        try {
-                            verifier(test.comment, test.actual, test.expected, test.matchingRules);
-                        }
-                        catch(e){
-                            console.log(e);
-                            throw e;
-                        }
-                    }).to.not.throw();
-                }
-                else {
-                    expect(function generatedTest(){
-                        try{
-                            verifier(test.comment, test.actual, test.expected, test.matchingRules);
-                        }
-                        catch(e){
-                            console.log(e);
-                            throw e;
-                        }
-                    }).to.throw();
-                }
-            });
+    testScenarios.forEach(function(test){
+        it("- " + test.comment, function(){
+            if(test.match){
+                verifier(test.actual, test.expected, test.expected.matchingRules, test.comment);
+            }
+            else {
+                expect(function generatedTest(){
+                    verifier(test.actual, test.expected, test.expected.matchingRules, test.comment);
+                }).to.throw(AssertionError);
+            }
         });
     });
 });

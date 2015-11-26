@@ -3,7 +3,7 @@
 var checkTypeMatch = require('../lib/check-type-match');
 var expect = require('chai').expect;
 
-describe.only('Given a matching set of objects and regex', function(){
+describe('Given a matching set of objects and regex', function(){
 
     var matchingConfigurations = [
         {
@@ -38,7 +38,52 @@ describe.only('Given a matching set of objects and regex', function(){
 
     matchingConfigurations.forEach(function(config, index){
         it('should match each pattern - test ' + index, function(){
-            expect(checkTypeMatch(config.matchingObjects, config.matchingExpectedObjects)).to.be.true;
+            expect(checkTypeMatch(config.matchingObjects, config.matchingExpectedObjects), '$.some.path[*]').to.be.falsey;
         });
     });
 });
+
+describe('Given a matching set of objects and regex', function(){
+
+    var nonMatchingConfigurations = [
+        {
+            matchingObjects: "Foobar",
+            matchingExpectedObjects: 123 
+        },
+        {
+            matchingObjects: "Foobar",
+            matchingExpectedObjects: {}
+        },
+        {
+            matchingObjects: "Foobar",
+            matchingExpectedObjects: []
+        },
+        {
+            matchingObjects: "",
+            matchingExpectedObjects: []
+        },
+        {
+            matchingObjects: [ "Foobar", "baz"],
+            matchingExpectedObjects: {} 
+        },
+        {
+            matchingObjects: [ "Foobar", "baz"],
+            matchingExpectedObjects: 123
+        },
+        {
+            matchingObjects: { "Foobar": "baz" },
+            matchingExpectedObjects: "Foo" 
+        },
+        {
+            matchingObjects: 1234,
+            matchingExpectedObjects: "0"
+        },
+    ];
+
+    nonMatchingConfigurations.forEach(function(config, index){
+        it('should match each pattern - test ' + index, function(){
+            expect(checkTypeMatch(config.matchingObjects, config.matchingExpectedObjects), "$.some.path[*]").to.be.truthy;
+        });
+    });
+});
+
