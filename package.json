@@ -1,5 +1,5 @@
 {
-  "name": "consumer-pact-node",
+  "name": "node-consumer-pact-validation",
   "version": "1.0.0",
   "description": "A consumer pact generator written for pure nodeJS",
   "main": "verifier.js",

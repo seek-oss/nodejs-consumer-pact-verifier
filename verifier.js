@@ -8,8 +8,8 @@ var queryString = require('query-string');
 /**
  * Private API
  * Takes an object and lower-cases its' keys
- * @param {Object} o Expected to be a set of headers 
- * @return {Object} New object with lowercase keys 
+ * @param {Object} o Expected to be a set of headers
+ * @return {Object} New object with lowercase keys
  */
 function makeObjectKeysLC (o){
     var keys = Object.keys(o);
@@ -20,9 +20,9 @@ function makeObjectKeysLC (o){
     return lcObject;
 }
 /**
- * Private API: 
- * removes whitespace after commas (for headers), 
- * so "alligators, hippos" -> "alligators,hippos" 
+ * Private API:
+ * removes whitespace after commas (for headers),
+ * so "alligators, hippos" -> "alligators,hippos"
  * @param {Object} h A set of headers, either expected or actual
  * @return {Object} A set of headers with whitespace removed
  */
@@ -36,10 +36,10 @@ function stripHeaderWhitespace (h){
 }
 
 /**
- * Private API: 
+ * Private API:
  * checks of the methods are equal, returns error object if not.
  */
-function checkMethod(actual, expected){
+function checkMethod(expected, actual){
     if(actual.toLowerCase() !== expected.toLowerCase()){
         return {
             error: "HTTP Methods are not equal",
@@ -51,12 +51,12 @@ function checkMethod(actual, expected){
 }
 
 /**
- * Private api: 
+ * Private api:
  * Checks the path given
  * @param {String} actual The actual url path, ie "/foo/bar/123"
- * @param {String} expected The expecte url path 
+ * @param {String} expected The expecte url path
  */
-function checkPath(actual, expected){
+function checkPath(expected, actual){
     if(actual.toLowerCase() !== expected.toLowerCase()){
         return {
             error: "Url paths are not equal",
@@ -68,12 +68,12 @@ function checkPath(actual, expected){
 }
 
 /**
- * Private api: 
- * Checks the query string given. Note this is case sensitive. 
+ * Private api:
+ * Checks the query string given. Note this is case sensitive.
  * @param {String} actual query string
  * @param {String} expected query string
  */
-function checkQuery(actual, expected){
+function checkQuery(expected, actual){
 
     //Ignore trailing ampersands
     var actualObj = actual ? queryString.parse(actual.replace(/\&$/, '')) : {};
@@ -82,26 +82,26 @@ function checkQuery(actual, expected){
     if(! _.isEqual(actualObj, expectedObj)){
         return {
             error: "Query parameters do not match",
-            expected: expectedObj, 
+            expected: expectedObj,
             actual: actualObj
         };
     }
 }
 
 /**
- * Private api: 
- * Checks the validity of the body. Actual should be strictly equal to the expected if 
- * using the simple (v1) matching rules. Otherwise apply the regex and type-checking of pact v2. 
+ * Private api:
+ * Checks the validity of the body. Actual should be strictly equal to the expected if
+ * using the simple (v1) matching rules. Otherwise apply the regex and type-checking of pact v2.
  */
-function checkBody (actual, expected, matchingRules){
+function checkBody (expected, actual, matchingRules){
     if(!expected){
-        return; 
+        return;
     }
     if(!matchingRules){ //Use v1 style simple matching
         if(! _.isEqual(actual, expected)){
             return {
                 error: "Body does not match expectation: ",
-                expected: expected, 
+                expected: expected,
                 actual: actual
             };
         }
@@ -120,29 +120,29 @@ function checkBody (actual, expected, matchingRules){
 }
 
 /**
- * Private api: 
+ * Private api:
  * Checks the validity of the headers being sent. Note that this isn't a strict equality check:
  * - Header keys are expected to be case insensitive
- * - Header values, when comma delimited, are whitespace insensitive 
+ * - Header values, when comma delimited, are whitespace insensitive
  * - Additional, non-expected headers being sent are ignored - Expectation is that headers asserted are a subset of those sent.
- */ 
-function checkHeaders(actual, expected, matchingRules){
+ */
+function checkHeaders(expected, actual, matchingRules){
     if(!expected){
-        return; 
+        return;
     }
-    //V1 Simple matching 
+    //V1 Simple matching
     if(!matchingRules){
         // Make header key casing insensitive
         var lcExpected = stripHeaderWhitespace(makeObjectKeysLC(expected));
         var lcActual = stripHeaderWhitespace(makeObjectKeysLC(actual));
-    
-        //Check all required headers are present: 
+
+        //Check all required headers are present:
         var expectedKeys = Object.keys(lcExpected);
         var failures = expectedKeys.map(function(k){
             if(lcExpected[k] !== lcActual[k]){
                 return {
                     error: "Headers do not match expectation:",
-                    expected: expected, 
+                    expected: expected,
                     actual: actual
                 };
             }
@@ -164,13 +164,13 @@ function checkHeaders(actual, expected, matchingRules){
 }
 
 /**
- * Public API: 
- * Main consumer pact verification entrypoint. Given a set of expectations it will either return 
- * the verified object or throw. 
+ * Public API:
+ * Main consumer pact verification entrypoint. Given a set of expectations it will either return
+ * the verified object or throw.
  *
- * @param {Object} expected The expected request. Object must include method, path, query, 
+ * @param {Object} expected The expected request. Object must include method, path, query,
  * headers and body elements as per https://github.com/pact-foundation/pact-specification/blob/version-2/testcases/request/body/matches.json
- * @param {Object} actual Similarly, the actual request. 
+ * @param {Object} actual Similarly, the actual request.
  * @param {object} matchingRules Optional, The v2 specification of extended matching rules such as type, regex and min/max requirements.
  * @param {String} comment Optional, A note about the test, used for identifying what's failing
  * @return {Object} return verified object if no assertions fail. Throws in the event of an assertion failure.
@@ -205,23 +205,16 @@ function verify(expected, actual, matchingRules, comment){
 
 module.exports = function(settings){
 
-   if(!settings.provider || !settings.consumer) {
-        throw {
-            error: "Pact assertions not correctly setup, please ensure that an object with a provider and consumer are passed in",
-            settings: settings
-        };
-   }
-
    return function verifyPact (expected, actual, matchingRules, comment){
-    
+
        if(!expected){
             throw {
-                error: "Expectation can't be undefined when verifying pacts" 
+                error: "Expectation can't be undefined when verifying pacts"
             };
        }
        if(!actual){
             throw {
-                error: "Actual results can't be undefined when verifying pacts" 
+                error: "Actual results can't be undefined when verifying pacts"
             };
        }
 
@@ -230,7 +223,7 @@ module.exports = function(settings){
                 name: settings.consumer
             },
             provider: {
-                name: settings.provider        
+                name: settings.provider
             },
             interactions: verify(expected, actual, matchingRules, comment)
        };
