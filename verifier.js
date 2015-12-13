@@ -40,6 +40,9 @@ function stripHeaderWhitespace (h){
  * checks of the methods are equal, returns error object if not.
  */
 function checkMethod(expected, actual){
+    if(!expected || !actual){
+        return;
+    }
     if(actual.toLowerCase() !== expected.toLowerCase()){
         return {
             error: "HTTP Methods are not equal",
@@ -57,6 +60,9 @@ function checkMethod(expected, actual){
  * @param {String} expected The expecte url path
  */
 function checkPath(expected, actual){
+    if(!expected){
+        return;
+    }
     if(actual.toLowerCase() !== expected.toLowerCase()){
         return {
             error: "Url paths are not equal",
@@ -74,6 +80,9 @@ function checkPath(expected, actual){
  * @param {String} expected query string
  */
 function checkQuery(expected, actual){
+    if(!expected){
+        return;
+    }
 
     //Ignore trailing ampersands
     var actualObj = actual ? queryString.parse(actual.replace(/\&$/, '')) : {};
