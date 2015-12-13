@@ -7,6 +7,10 @@
     "test": "mocha $(find test | grep '.js$')",
     "watch": "nodemon --exec \"npm test\""
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SEEK-Jobs/nodejs-consumer-pact-verifier.git"
+  },
   "keywords": [
     "Pact",
     "Node"

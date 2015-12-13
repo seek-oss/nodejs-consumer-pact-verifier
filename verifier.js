@@ -60,7 +60,7 @@ function checkMethod(expected, actual){
  * @param {String} expected The expecte url path
  */
 function checkPath(expected, actual){
-    if(!expected){
+    if(!expected && expected !== ""){
         return;
     }
     if(actual.toLowerCase() !== expected.toLowerCase()){
