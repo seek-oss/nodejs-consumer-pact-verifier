@@ -24,7 +24,7 @@
   "dependencies": {
     "assertion-error": "^1.0.1",
     "deep-diff": "^0.3.3",
-    "jsonpath": "^0.2.1",
+    "jsonpath-plus": "^0.14.0",
     "lodash": "^3.10.1",
     "query-string": "^3.0.0",
     "type-detect": "^1.0.0"
