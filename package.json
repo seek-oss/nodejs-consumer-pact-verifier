@@ -1,7 +1,7 @@
 {
   "name": "node-consumer-pact-validation",
   "version": "1.0.2",
-  "description": "A consumer pact generator written for pure nodeJS",
+  "description": "A consumer pact generator written for pure Node.js",
   "main": "verifier.js",
   "scripts": {
     "test": "mocha $(find test | grep '.js$')",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SEEK-Jobs/nodejs-consumer-pact-verifier.git"
+    "url": "git+https://github.com/seek-oss/nodejs-consumer-pact-verifier.git"
   },
   "keywords": [
     "Pact",
